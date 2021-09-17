@@ -10,15 +10,15 @@ namespace PhoneDirectory.Entities.Entities
     {
         [Key]
         public int Id { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
         [StringLength(100)]
         public string Name { get; set; }
         [StringLength(50)]
         public string Surname { get; set; }
 
         public virtual Information Information { get; set; }
-
-        [ForeignKey("Information")]
-        public int InformationId { get; set; }
 
         public int Status { get; set; }
     }

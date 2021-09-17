@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhoneDirectory.Repository;
+using PhoneDirectory.Repository.IRepositories;
+using PhoneDirectory.Repository.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +28,11 @@ namespace PhoneDirectory.API
         {
             services.AddControllers();
             services.AddDbContext<PhoneDirectoryDbContext>(options =>
-options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+                options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IInformationRepository, InformationRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

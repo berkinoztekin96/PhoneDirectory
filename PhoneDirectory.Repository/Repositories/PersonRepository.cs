@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace PhoneDirectory.Repository.Repositories
 {
@@ -16,6 +17,29 @@ namespace PhoneDirectory.Repository.Repositories
         {
         }
 
+        public async Task<bool> DeletePerson(int id) // soft delete
+        {
+            try
+            {
+                Person person = await GetAllAsync().Where(x => x.Id == id).FirstOrDefaultAsync();
+
+                if (person != null)
+                {
+                    person.Status = 0;
+                    return true;
+                }
+
+                else
+                    return false;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
 
     }

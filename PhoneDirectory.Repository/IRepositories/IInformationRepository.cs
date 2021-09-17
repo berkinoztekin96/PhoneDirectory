@@ -10,5 +10,7 @@ namespace PhoneDirectory.Repository.IRepositories
     {
 
         Task<Information> GetInformationByUserId(int personId);
+
+        Task<bool> DeleteInformation(int id);
     }
 }

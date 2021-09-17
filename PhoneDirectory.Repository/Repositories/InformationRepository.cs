@@ -30,5 +30,30 @@ namespace PhoneDirectory.Repository.Repositories
                 throw;
             }
         }
+
+        public async Task<bool> DeleteInformation(int id) // soft delete
+        {
+            try
+            {
+                Information information = await GetAllAsync().Where(x => x.Id == id).FirstOrDefaultAsync();
+
+                if (information != null)
+                {
+                    information.Status = 0;
+                    return true;
+                }
+
+                else
+                    return false;
+                    
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

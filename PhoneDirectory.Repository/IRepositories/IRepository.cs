@@ -10,9 +10,9 @@ namespace PhoneDirectory.Repository.IRepositories
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<TEntity> GetByIdAsync(int id);
-        IQueryable<TEntity> GetAllAsync();
-        Task CreateAsync(TEntity entity);
-        void UpdateAsync(TEntity entity);
+        Task<IQueryable<TEntity>> GetAllAsync();
+        Task<TEntity> CreateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
     }
 }

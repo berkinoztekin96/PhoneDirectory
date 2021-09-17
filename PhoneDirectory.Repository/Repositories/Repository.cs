@@ -19,12 +19,13 @@ namespace PhoneDirectory.Repository.Repositories
         }
 
     
-        public async Task CreateAsync(TEntity entity)
+        public async Task<TEntity> CreateAsync(TEntity entity)
         {
             try
             {
                 await dbContext.Set<TEntity>().AddAsync(entity);
                 await dbContext.SaveChangesAsync();
+                return entity;
             }
             catch (Exception ex)
             {
@@ -33,11 +34,11 @@ namespace PhoneDirectory.Repository.Repositories
             }
         }
 
-        public IQueryable<TEntity> GetAllAsync()
+        public Task<IQueryable<TEntity>> GetAllAsync()
         {
             try
             {
-                return  dbContext.Set<TEntity>().AsNoTracking();
+                return  Task.FromResult(dbContext.Set<TEntity>().AsNoTracking());
             }
             catch (Exception ex)
             {
@@ -59,12 +60,13 @@ namespace PhoneDirectory.Repository.Repositories
             }
         }
 
-        public async void UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             try
             {
                 dbContext.Set<TEntity>().Update(entity);
                 await dbContext.SaveChangesAsync();
+                return entity;
             }
             catch (Exception ex)
             {

@@ -17,21 +17,16 @@ namespace PhoneDirectory.Repository.Repositories
         {
         }
 
-        public async Task<bool> DeletePerson(int id) // soft delete
+     
+
+       public async Task DeletePerson(int id)
         {
             try
             {
-                Person person = await GetAllAsync().Where(x => x.Id == id).FirstOrDefaultAsync();
+                Person person = await GetByIdAsync(id);
 
                 if (person != null)
-                {
                     person.Status = 0;
-                    return true;
-                }
-
-                else
-                    return false;
-
 
             }
             catch (Exception ex)
@@ -40,7 +35,5 @@ namespace PhoneDirectory.Repository.Repositories
                 throw;
             }
         }
-
-
     }
 }

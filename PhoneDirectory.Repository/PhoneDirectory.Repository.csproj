@@ -28,8 +28,4 @@
     <ProjectReference Include="..\PhoneDirectory.Entities\PhoneDirectory.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
-
 </Project>

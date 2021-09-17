@@ -26,7 +26,7 @@ namespace PhoneDirectory.API
         {
             services.AddControllers();
             services.AddDbContext<PhoneDirectoryDbContext>(options =>
-options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlServer(Configuration.GetConnectionString("Connection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

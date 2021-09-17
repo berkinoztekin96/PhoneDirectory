@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhoneDirectory.Repository;
 
 namespace PhoneDirectory.Repository.Migrations
 {
     [DbContext(typeof(PhoneDirectoryDbContext))]
-    partial class PhoneDirectoryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210917204141_Status")]
+    partial class Status
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

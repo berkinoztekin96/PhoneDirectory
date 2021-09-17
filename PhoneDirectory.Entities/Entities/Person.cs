@@ -19,5 +19,7 @@ namespace PhoneDirectory.Entities.Entities
 
         [ForeignKey("Information")]
         public int InformationId { get; set; }
+
+        public int Status { get; set; }
     }
 }

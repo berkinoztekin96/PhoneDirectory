@@ -16,5 +16,7 @@ namespace PhoneDirectory.Entities.Entities
         public string Location { get; set; }
 
         public string Detail { get; set; } // Information Content
+
+        public int Status { get; set; }
     }
 }

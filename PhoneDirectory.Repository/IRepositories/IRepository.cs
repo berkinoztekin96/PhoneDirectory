@@ -13,5 +13,9 @@ namespace PhoneDirectory.Repository.IRepositories
         Task<TEntity> UpdateAsync(TEntity entity);
 
         IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
+
+        public IQueryable<TEntity> GetAllAsync();
+
+
     }
 }

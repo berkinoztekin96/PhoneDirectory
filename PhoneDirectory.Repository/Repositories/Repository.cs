@@ -53,6 +53,19 @@ namespace PhoneDirectory.Repository.Repositories
             var query =  GetAllAsync().Where(predicate);
             return  includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
+
+        public IQueryable<TEntity> GetAllAsync()
+        {
+            try
+            {
+                return dbContext.Set<TEntity>();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 
 }

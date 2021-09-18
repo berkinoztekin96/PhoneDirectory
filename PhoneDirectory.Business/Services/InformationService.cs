@@ -1,4 +1,5 @@
-﻿using PhoneDirectory.Business.IServices;
+﻿using Microsoft.EntityFrameworkCore;
+using PhoneDirectory.Business.IServices;
 using PhoneDirectory.Entities.Entities;
 using PhoneDirectory.Repository.IRepositories;
 using System;
@@ -65,7 +66,7 @@ namespace PhoneDirectory.Business.Services
                 if (id <= 0)
                     throw new Exception("Bir hata oluştu!");
 
-                Information Information = await _informationRepository.GetByIdAsync(id);
+                Information Information = await _informationRepository.FindBy(x=> x.Id == id).FirstOrDefaultAsync();
                 return Information;
 
 

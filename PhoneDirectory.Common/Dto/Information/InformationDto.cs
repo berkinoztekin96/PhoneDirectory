@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PhoneDirectory.Common.Dto
+namespace PhoneDirectory.Common.Dto.Information
 {
     public class InformationDto
     {

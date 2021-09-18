@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PhoneDirectory.Common.Dto.Person;
+using PhoneDirectory.Common.Helper;
 using PhoneDirectory.Entities.Entities;
+using PhoneDirectory.Repository;
 using PhoneDirectory.Repository.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -12,24 +15,60 @@ namespace PhoneDirectory.Business.Services
     public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
-
-        public PersonService(IPersonRepository personRepository)
+        private readonly IInformationRepository _informationRepository;
+        private readonly PhoneDirectoryDbContext dbContext;
+        public PersonService(IPersonRepository personRepository, IInformationRepository informationRepository, PhoneDirectoryDbContext phoneDirectoryDbContext)
         {
             _personRepository = personRepository;
+            _informationRepository = informationRepository;
+            dbContext = phoneDirectoryDbContext;
         }
 
 
-        public async Task<Person> CreatePerson(Person person)
+        public async Task<Response<Person>> CreatePerson(CreatePersonDto dto)
         {
-            try
+            using (var transaction = dbContext.Database.BeginTransaction())
             {
-                var result = await _personRepository.CreateAsync(person);
-                return result;
-            }
-            catch (Exception ex)
-            {
+                try
+                {
 
-                throw new Exception(ex.Message);
+
+
+                    Person person = new Person()
+                    {
+                        CreatedDate = DateTime.Now,
+                        Name = dto.Name,
+                        Surname = dto.Surname,
+                        Status = 1
+                    };
+
+                    await _personRepository.CreateAsync(person);
+                   
+                    Information information = new Information()
+                    {
+                        CreatedDate = DateTime.Now,
+                        Detail = dto.Detail,
+                        Email = dto.Email,
+                        Location = dto.Location,
+                        Phone = dto.Phone,
+                        Status = 1,
+                        PersonId = person.Id
+                    };
+
+                    await _informationRepository.CreateAsync(information);
+
+                    transaction.Commit();
+
+                    return new Response<Person>() { isSuccess = true, Data = person, List = null, Message = "Success", Status = 200 };
+                }
+
+
+
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new Response<Person>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
+                }
             }
 
         }
@@ -47,12 +86,12 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public List<Person> GetAllPersons()
+        public async Task<List<Person>> GetAllPersons()
         {
             try
             {
-                return _personRepository.GetAllAsync().ToList();
-               
+                return await _personRepository.FindBy(x => x.Status == 1).ToListAsync();
+
             }
             catch (Exception ex)
             {
@@ -61,7 +100,7 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public  Task<Person> GetPersonById(int id)
+        public Task<Person> GetPersonById(int id)
         {
             try
             {
@@ -71,10 +110,10 @@ namespace PhoneDirectory.Business.Services
                 //Person person = await _personRepository.GetByIdAsync(id);
                 //return person;
 
-                Person person =  _personRepository.FindBy(x => x.Id == id, x=> x.Information).FirstOrDefault();
+                Person person = _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefault();
 
                 return Task.FromResult(person);
-          
+
             }
             catch (Exception ex)
             {
@@ -91,7 +130,7 @@ namespace PhoneDirectory.Business.Services
                 await _personRepository.UpdateAsync(person);
                 return person;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 throw new Exception(ex.Message);
@@ -99,6 +138,6 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-       
+
     }
 }

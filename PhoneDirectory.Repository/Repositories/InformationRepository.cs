@@ -21,7 +21,7 @@ namespace PhoneDirectory.Repository.Repositories
         {
             try
             {
-                return await GetAllAsync().Where(x => x.PersonId == personId).FirstOrDefaultAsync();
+                return await FindBy(x => x.PersonId == personId).FirstOrDefaultAsync();
 
             }
             catch (Exception ex)

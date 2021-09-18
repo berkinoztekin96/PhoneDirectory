@@ -11,7 +11,6 @@ namespace PhoneDirectory.Repository.Repositories
 {
     public class PersonRepository : Repository<Person>, IPersonRepository
     {
-        private readonly PhoneDirectoryDbContext dbContext;
         public PersonRepository(PhoneDirectoryDbContext context)
             : base(context)
         {
@@ -23,7 +22,7 @@ namespace PhoneDirectory.Repository.Repositories
         {
             try
             {
-                Person person = await GetByIdAsync(id);
+                Person person = await FindBy(x=> x.Id == id).FirstOrDefaultAsync();
 
                 if (person != null)
                     person.Status = 0;

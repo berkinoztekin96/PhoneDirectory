@@ -1,8 +1,9 @@
-﻿using System;
+﻿using PhoneDirectory.Common.Dto.Information;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PhoneDirectory.Common.Dto
+namespace PhoneDirectory.Common.Dto.Person
 {
     public class PersonDto
     {

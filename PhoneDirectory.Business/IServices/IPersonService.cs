@@ -1,4 +1,6 @@
-﻿using PhoneDirectory.Entities.Entities;
+﻿using PhoneDirectory.Common.Dto.Person;
+using PhoneDirectory.Common.Helper;
+using PhoneDirectory.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,9 @@ namespace PhoneDirectory.Business.Services
     public interface IPersonService
     {
 
-        List<Person> GetAllPersons();
+        Task<List<Person>> GetAllPersons();
         Task<Person> GetPersonById(int id);
-        Task<Person> CreatePerson(Person person);
+        Task<Response<Person>> CreatePerson(CreatePersonDto dto);
         Task<Person> UpdatePerson(Person person);
         Task DeletePerson(int id);
     }

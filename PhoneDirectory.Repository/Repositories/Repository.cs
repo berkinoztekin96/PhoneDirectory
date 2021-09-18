@@ -34,32 +34,6 @@ namespace PhoneDirectory.Repository.Repositories
             }
         }
 
-        public  IQueryable<TEntity> GetAllAsync()
-        {
-            try
-            {
-                return dbContext.Set<TEntity>();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-        public async Task<TEntity> GetByIdAsync(int id)
-        {
-            try
-            {
-                return await dbContext.Set<TEntity>().FindAsync(id);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             try
@@ -73,6 +47,11 @@ namespace PhoneDirectory.Repository.Repositories
 
                 throw;
             }
+        }
+        public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query =  GetAllAsync().Where(predicate);
+            return  includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
     }
 

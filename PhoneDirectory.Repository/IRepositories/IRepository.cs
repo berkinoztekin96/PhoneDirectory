@@ -9,10 +9,9 @@ namespace PhoneDirectory.Repository.IRepositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> GetByIdAsync(int id);
-        IQueryable<TEntity> GetAllAsync();
         Task<TEntity> CreateAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);
 
+        IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
     }
 }

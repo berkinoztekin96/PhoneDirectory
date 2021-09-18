@@ -10,9 +10,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PhoneDirectory.Business\PhoneDirectory.Business.csproj" />
+    <ProjectReference Include="..\PhoneDirectory.Common\PhoneDirectory.Common.csproj" />
     <ProjectReference Include="..\PhoneDirectory.Repository\PhoneDirectory.Repository.csproj" />
   </ItemGroup>
 

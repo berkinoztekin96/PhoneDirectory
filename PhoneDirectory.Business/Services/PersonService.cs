@@ -61,17 +61,20 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public async Task<Person> GetPersonById(int id)
+        public  Task<Person> GetPersonById(int id)
         {
             try
             {
-                if(id <= 0)
+                if (id <= 0)
                     throw new Exception("Bir hata oluştu!");
 
-                Person person = await _personRepository.GetByIdAsync(id);
-                return person;
+                //Person person = await _personRepository.GetByIdAsync(id);
+                //return person;
 
+                Person person =  _personRepository.FindBy(x => x.Id == id, x=> x.Information).FirstOrDefault();
 
+                return Task.FromResult(person);
+          
             }
             catch (Exception ex)
             {

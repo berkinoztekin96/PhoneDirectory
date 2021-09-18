@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using PhoneDirectory.Business.IServices;
 using PhoneDirectory.Entities.Entities;
 using PhoneDirectory.Repository.IRepositories;
 using System;
@@ -9,21 +9,18 @@ using System.Threading.Tasks;
 
 namespace PhoneDirectory.Business.Services
 {
-    public class PersonService : IPersonService
+    public class InformationService : IInformationService
     {
-        private readonly IPersonRepository _personRepository;
-
-        public PersonService(IPersonRepository personRepository)
+        private readonly IInformationRepository _informationRepository;
+        public InformationService(IInformationRepository informationRepository)
         {
-            _personRepository = personRepository;
+            _informationRepository = informationRepository;
         }
-
-
-        public async Task<Person> CreatePerson(Person person)
+        public async Task<Information> CreateInformation(Information Information)
         {
             try
             {
-                var result = await _personRepository.CreateAsync(person);
+                var result = await _informationRepository.CreateAsync(Information);
                 return result;
             }
             catch (Exception ex)
@@ -34,11 +31,11 @@ namespace PhoneDirectory.Business.Services
 
         }
 
-        public async Task DeletePerson(int id)
+        public async Task DeleteInformation(int id)
         {
             try
             {
-                await _personRepository.DeletePerson(id);
+                await _informationRepository.DeleteInformation(id);
             }
             catch (Exception ex)
             {
@@ -47,12 +44,12 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public List<Person> GetAllPersons()
+        public List<Information> GetAllInformations()
         {
             try
             {
-                return _personRepository.GetAllAsync().ToList();
-               
+                return _informationRepository.GetAllAsync().ToList();
+
             }
             catch (Exception ex)
             {
@@ -61,15 +58,15 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public async Task<Person> GetPersonById(int id)
+        public async Task<Information> GetInformationById(int id)
         {
             try
             {
-                if(id <= 0)
+                if (id <= 0)
                     throw new Exception("Bir hata oluştu!");
 
-                Person person = await _personRepository.GetByIdAsync(id);
-                return person;
+                Information Information = await _informationRepository.GetByIdAsync(id);
+                return Information;
 
 
             }
@@ -80,15 +77,15 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public async Task<Person> UpdatePerson(Person person)
+        public async Task<Information> UpdateInformation(Information Information)
         {
 
             try
             {
-                await _personRepository.UpdateAsync(person);
-                return person;
+                await _informationRepository.UpdateAsync(Information);
+                return Information;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 throw new Exception(ex.Message);
@@ -96,6 +93,6 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-       
+      
     }
 }

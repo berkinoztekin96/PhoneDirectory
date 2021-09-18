@@ -10,7 +10,7 @@ namespace PhoneDirectory.Business.Services
     public interface IPersonService
     {
 
-        Task<IQueryable<Person>> GetAllPersons();
+        List<Person> GetAllPersons();
         Task<Person> GetPersonById(int id);
         Task<Person> CreatePerson(Person person);
         Task<Person> UpdatePerson(Person person);

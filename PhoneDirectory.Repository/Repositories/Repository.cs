@@ -34,11 +34,11 @@ namespace PhoneDirectory.Repository.Repositories
             }
         }
 
-        public Task<IQueryable<TEntity>> GetAllAsync()
+        public  IQueryable<TEntity> GetAllAsync()
         {
             try
             {
-                return  Task.FromResult(dbContext.Set<TEntity>().AsNoTracking());
+                return dbContext.Set<TEntity>();
             }
             catch (Exception ex)
             {

@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PhoneDirectory.Common\PhoneDirectory.Common.csproj" />
     <ProjectReference Include="..\PhoneDirectory.Entities\PhoneDirectory.Entities.csproj" />
-    <ProjectReference Include="..\PhoneDirectory.Repository\PhoneDirectory.Repository.csproj" />
   </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@ namespace PhoneDirectory.Business.Services
         Task<Response<PersonDto>> GetAllPersons();
         Task<Response<PersonDto>> GetPersonById(int id);
         Task<Response<PersonDto>> CreatePerson(CreatePersonDto dto);
-        Task<Person> UpdatePerson(Person person);
-        Task<Response<Person>> DeletePerson(int id);
+        Task<Response<PersonDto>> UpdatePerson(UpdatePersonDto dto);
+        Task<Response<PersonDto>> DeletePerson(int id);
     }
 }

@@ -82,19 +82,30 @@ namespace PhoneDirectory.API.Controllers
             var serviceResult = await _personService.DeletePerson(id);
 
             if (serviceResult.isSuccess)
-            {
-                PersonDto dto = new PersonDto()
-                {
-                    Name = serviceResult.Data.Name,
-                    Surname = serviceResult.Data.Surname
+                return new Response<PersonDto>() { isSuccess = true, Data = serviceResult.Data, List = null, Message = "Success", Status = serviceResult.Status };
 
-                };
-                return new Response<PersonDto>() { isSuccess = true, Data = dto, List = null, Message = "Success", Status = serviceResult.Status };
-            }
 
             else
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
         }
 
+
+        [HttpPut("UpdatePerson")]
+        public async Task<Response<PersonDto>> UpdatePerson([FromBody] UpdatePersonDto dto)
+        {
+
+            if (String.IsNullOrEmpty(dto.Name) && String.IsNullOrEmpty(dto.Surname))
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Name or surname cannot be empty", Status = 500 };
+
+            var serviceResult = await _personService.UpdatePerson(dto);
+
+            if (serviceResult.isSuccess)
+                return new Response<PersonDto>() { isSuccess = false, Data = serviceResult.Data, List = null, Message = "Name or surname cannot be empty", Status = serviceResult.Status };
+
+            else
+                return new Response<PersonDto>() { isSuccess = false, Data = serviceResult.Data, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
+
+
+        }
     }
 }

@@ -95,37 +95,57 @@ namespace PhoneDirectory.Business.Services
 
         }
 
-        public async Task<Response<Person>> DeletePerson(int id) // todo: bak
+        public async Task<Response<PersonDto>> DeletePerson(int id)
         {
             try
             {
 
-                Person person = _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefault();
+                Person person = await _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefaultAsync();
                 if (person == null)
-                    return new Response<Person>() { isSuccess = false, Data = person, List = null, Message = "Person could not found", Status = 200 };
+                    return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Person could not found", Status = 200 };
+
+                if(person.Status == 0)
+                    return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Person is already deleted!", Status = 200 };
 
 
                 person.Status = 0;
-
+                PersonDto personDto = new PersonDto()
+                {
+                    CreatedDate = person.CreatedDate,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    Status = person.Status,
+                    Information = new List<InformationDto>(),
+                };
                 foreach (var item in person.Information)
                 {
 
                     item.Status = 0;
 
+                    InformationDto informationDto = new InformationDto()
+                    {
+                        CreatedDate = item.CreatedDate,
+                        Detail = item.Detail,
+                        Email = item.Email,
+                        Location = item.Location,
+                        PersonId = item.PersonId,
+                        Phone = item.Phone,
+                        Status = item.Status
+                    };
+                    personDto.Information.Add(informationDto);
+
+
+
 
                 }
-
-
-
-
                 await dbContext.SaveChangesAsync();
 
-                return new Response<Person>() { isSuccess = true, Data = person, List = null, Message = "Success", Status = 200 };
+                return new Response<PersonDto>() { isSuccess = true, Data = personDto, List = null, Message = "Success", Status = 200 };
             }
             catch (Exception ex)
             {
 
-                return new Response<Person>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
             }
         }
 
@@ -149,17 +169,20 @@ namespace PhoneDirectory.Business.Services
 
                     foreach (var item in person.Information)
                     {
-                        InformationDto informationDto = new InformationDto()
+                        if (item.Status == 1)
                         {
-                            CreatedDate = item.CreatedDate,
-                            Detail = item.Detail,
-                            Email = item.Email,
-                            Location = item.Location,
-                            PersonId = item.PersonId,
-                            Phone = item.Phone,
-                            Status = item.Status,
-                        };
-                       personDto.Information.Add(informationDto);
+                            InformationDto informationDto = new InformationDto()
+                            {
+                                CreatedDate = item.CreatedDate,
+                                Detail = item.Detail,
+                                Email = item.Email,
+                                Location = item.Location,
+                                PersonId = item.PersonId,
+                                Phone = item.Phone,
+                                Status = item.Status,
+                            };
+                            personDto.Information.Add(informationDto);
+                        }
                     }
 
                     listDto.Add(personDto);
@@ -188,6 +211,10 @@ namespace PhoneDirectory.Business.Services
                 Person person = await _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefaultAsync();
                 if (person != null)
                 {
+                    if(person.Status == 0)
+                        return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "No user found", Status = 200 };
+
+
                     PersonDto personDto = new PersonDto()
                     {
                         CreatedDate = person.CreatedDate,
@@ -200,19 +227,22 @@ namespace PhoneDirectory.Business.Services
 
                     foreach (var item in person.Information)
                     {
-                        InformationDto informationDto = new InformationDto()
+                        if (item.Status == 1)
                         {
-                            CreatedDate = item.CreatedDate,
-                            Detail = item.Detail,
-                            Email = item.Email,
-                            Location = item.Location,
-                            PersonId = item.PersonId,
-                            Phone = item.Phone,
-                            Status = item.Status
-                        };
-                        personDto.Information.Add(informationDto);
+                            InformationDto informationDto = new InformationDto()
+                            {
+                                CreatedDate = item.CreatedDate,
+                                Detail = item.Detail,
+                                Email = item.Email,
+                                Location = item.Location,
+                                PersonId = item.PersonId,
+                                Phone = item.Phone,
+                                Status = item.Status
+                            };
+                            personDto.Information.Add(informationDto);
+                        }
                     }
-                    return new Response<PersonDto>() { isSuccess = true, Data = personDto, List = null, Message = "No user found", Status = 200 };
+                    return new Response<PersonDto>() { isSuccess = true, Data = personDto, List = null, Message = "Success", Status = 200 };
                 }
 
                 else
@@ -227,18 +257,61 @@ namespace PhoneDirectory.Business.Services
             }
         }
 
-        public async Task<Person> UpdatePerson(Person person)
+        public async Task<Response<PersonDto>> UpdatePerson(UpdatePersonDto dto)
         {
 
             try
             {
-                await _personRepository.UpdateAsync(person);
-                return person;
+                Person person = await _personRepository.FindBy(x => x.Id == dto.Id, x => x.Information).FirstOrDefaultAsync();
+                if (person == null)
+                    return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Person could not found", Status = 200 };
+
+                person.Name = dto.Name;
+                person.Surname = dto.Surname;
+
+                await dbContext.SaveChangesAsync();
+
+                PersonDto personDto = new PersonDto()
+                {
+                    CreatedDate = person.CreatedDate,
+                    Name = person.Name,
+                    Surname = person.Surname,
+                    Status = person.Status,
+                    Information = new List<InformationDto>(),
+                };
+
+
+                foreach (var item in person.Information)
+                {
+                    if (item.Status == 1)
+                    {
+
+
+                        InformationDto informationDto = new InformationDto()
+                        {
+                            CreatedDate = item.CreatedDate,
+                            Detail = item.Detail,
+                            Email = item.Email,
+                            Location = item.Location,
+                            PersonId = item.PersonId,
+                            Phone = item.Phone,
+                            Status = item.Status
+                        };
+                        personDto.Information.Add(informationDto);
+                    }
+                }
+
+
+                return new Response<PersonDto>() { isSuccess = false, Data = personDto, List = null, Message = "Success", Status = 200 };
+
+
+
+
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
 
             }
         }

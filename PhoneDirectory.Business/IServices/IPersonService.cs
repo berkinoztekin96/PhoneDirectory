@@ -12,10 +12,10 @@ namespace PhoneDirectory.Business.Services
     public interface IPersonService
     {
 
-        Task<List<Person>> GetAllPersons();
-        Task<Person> GetPersonById(int id);
-        Task<Response<Person>> CreatePerson(CreatePersonDto dto);
+        Task<Response<PersonDto>> GetAllPersons();
+        Task<Response<PersonDto>> GetPersonById(int id);
+        Task<Response<PersonDto>> CreatePerson(CreatePersonDto dto);
         Task<Person> UpdatePerson(Person person);
-        Task DeletePerson(int id);
+        Task<Response<Person>> DeletePerson(int id);
     }
 }

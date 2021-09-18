@@ -27,19 +27,16 @@ namespace PhoneDirectory.API.Controllers
         [HttpGet("GetPerson/{id}")]
         public async Task<Response<PersonDto>> Get(int id)
         {
-            Person person = await _personService.GetPersonById(id);
-            if (person == null)
-                return new Response<PersonDto>() { Data = null, List = null, Message = "User could not find!", Status = 200 };
 
-            PersonDto dto = new PersonDto()
-            {
-                CreatedDate = person.CreatedDate,
-                Name = person.Name,
-                Surname = person.Surname,
-                Status = person.Status,            
-            };
+            var serviceResult = await _personService.GetPersonById(id);
 
-            return new Response<PersonDto>() {isSuccess = false, Data = dto, List = null, Message = "Success", Status = 200 };
+            if (serviceResult.isSuccess)
+                return new Response<PersonDto>() { Data = serviceResult.Data, List = null, Message = "Success", Status = serviceResult.Status };
+
+            else
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
+
+
         }
 
 
@@ -47,31 +44,57 @@ namespace PhoneDirectory.API.Controllers
         public async Task<Response<PersonDto>> CreatePerson(CreatePersonDto dto)
         {
             RegexHelper helper = new RegexHelper();
-            if(String.IsNullOrEmpty(dto.Name) && String.IsNullOrEmpty(dto.Surname))
-                return new Response<PersonDto>() {isSuccess = false, Data = null, List = null, Message = "Name or surname cannot be empty!", Status = 200 };
+            if (String.IsNullOrEmpty(dto.Name) && String.IsNullOrEmpty(dto.Surname))
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Name or surname cannot be empty!", Status = 200 };
 
-           else if(!helper.IsValidMail(dto.Email))
-                return new Response<PersonDto>() {isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
+            else if (!helper.IsValidMail(dto.Email))
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
 
-           var serviceResult = await _personService.CreatePerson(dto);
+            var serviceResult = await _personService.CreatePerson(dto);
 
-            if(serviceResult.isSuccess)
+            if (serviceResult.isSuccess)
             {
-                PersonDto resultData = new PersonDto()
+
+                return new Response<PersonDto>() { isSuccess = true, Data = serviceResult.Data, List = null, Message = "Success", Status = serviceResult.Status };
+            }
+
+            else
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
+        }
+
+
+        [HttpGet("GetPersonList")]
+        public async Task<Response<PersonDto>> GetPersonList()
+        {
+
+            var serviceResult = await _personService.GetAllPersons();
+
+            if (serviceResult.isSuccess)
+                return new Response<PersonDto>() { isSuccess = true, Data = serviceResult.Data, List = serviceResult.List, Message = "Success", Status = serviceResult.Status };
+            else
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
+        }
+
+        [HttpDelete("DeletePerson/{id}")]
+        public async Task<Response<PersonDto>> DeletePerson(int id)
+        {
+
+            var serviceResult = await _personService.DeletePerson(id);
+
+            if (serviceResult.isSuccess)
+            {
+                PersonDto dto = new PersonDto()
                 {
-                    CreatedDate = serviceResult.Data.CreatedDate,
                     Name = serviceResult.Data.Name,
                     Surname = serviceResult.Data.Surname
 
                 };
-                return new Response<PersonDto>() { isSuccess = true, Data = resultData, List = null, Message = "Success", Status = serviceResult.Status };
+                return new Response<PersonDto>() { isSuccess = true, Data = dto, List = null, Message = "Success", Status = serviceResult.Status };
             }
-         
+
             else
-                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status};
-
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
         }
-
 
     }
 }

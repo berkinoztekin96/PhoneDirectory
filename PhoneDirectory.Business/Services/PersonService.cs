@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PhoneDirectory.Common.Dto.Information;
 using PhoneDirectory.Common.Dto.Person;
 using PhoneDirectory.Common.Helper;
 using PhoneDirectory.Entities.Entities;
@@ -25,15 +26,12 @@ namespace PhoneDirectory.Business.Services
         }
 
 
-        public async Task<Response<Person>> CreatePerson(CreatePersonDto dto)
+        public async Task<Response<PersonDto>> CreatePerson(CreatePersonDto dto)
         {
             using (var transaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
-
-
-
                     Person person = new Person()
                     {
                         CreatedDate = DateTime.Now,
@@ -43,7 +41,7 @@ namespace PhoneDirectory.Business.Services
                     };
 
                     await _personRepository.CreateAsync(person);
-                   
+
                     Information information = new Information()
                     {
                         CreatedDate = DateTime.Now,
@@ -59,7 +57,31 @@ namespace PhoneDirectory.Business.Services
 
                     transaction.Commit();
 
-                    return new Response<Person>() { isSuccess = true, Data = person, List = null, Message = "Success", Status = 200 };
+
+                    InformationDto informationDto = new InformationDto()
+                    {
+                        CreatedDate = information.CreatedDate,
+                        Detail = information.Detail,
+                        Email = information.Email,
+                        Location = information.Location,
+                        PersonId = information.PersonId,
+                        Phone = information.Phone,
+                        Status = information.Status
+                    };
+
+                    var informationList = new List<InformationDto>();
+                    informationList.Add(informationDto);
+                    PersonDto returnDto = new PersonDto()
+                    {
+                        Name = person.Name,
+                        Surname = person.Surname,
+                        Information = informationList,
+                        CreatedDate = person.CreatedDate,
+                        Status = person.Status
+                    };
+
+
+                    return new Response<PersonDto>() { isSuccess = true, Data = returnDto, List = null, Message = "Success", Status = 200 };
                 }
 
 
@@ -67,58 +89,141 @@ namespace PhoneDirectory.Business.Services
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return new Response<Person>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
+                    return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
                 }
             }
 
         }
 
-        public async Task DeletePerson(int id)
+        public async Task<Response<Person>> DeletePerson(int id) // todo: bak
         {
             try
             {
-                await _personRepository.DeletePerson(id);
+
+                Person person = _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefault();
+                if (person == null)
+                    return new Response<Person>() { isSuccess = false, Data = person, List = null, Message = "Person could not found", Status = 200 };
+
+
+                person.Status = 0;
+
+                foreach (var item in person.Information)
+                {
+
+                    item.Status = 0;
+
+
+                }
+
+
+
+
+                await dbContext.SaveChangesAsync();
+
+                return new Response<Person>() { isSuccess = true, Data = person, List = null, Message = "Success", Status = 200 };
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return new Response<Person>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
             }
         }
 
-        public async Task<List<Person>> GetAllPersons()
+        public async Task<Response<PersonDto>> GetAllPersons()
         {
             try
             {
-                return await _personRepository.FindBy(x => x.Status == 1).ToListAsync();
+                List<PersonDto> listDto = new List<PersonDto>();
+                var personList = await _personRepository.FindBy(x => x.Status == 1, x => x.Information).ToListAsync();
+
+                foreach (var person in personList)
+                {
+                    PersonDto personDto = new PersonDto()
+                    {
+                        CreatedDate = person.CreatedDate,
+                        Information = new List<InformationDto>(),
+                        Name = person.Name,
+                        Surname = person.Surname,
+                        Status = person.Status
+                    };
+
+                    foreach (var item in person.Information)
+                    {
+                        InformationDto informationDto = new InformationDto()
+                        {
+                            CreatedDate = item.CreatedDate,
+                            Detail = item.Detail,
+                            Email = item.Email,
+                            Location = item.Location,
+                            PersonId = item.PersonId,
+                            Phone = item.Phone,
+                            Status = item.Status,
+                        };
+                       personDto.Information.Add(informationDto);
+                    }
+
+                    listDto.Add(personDto);
+                }
+
+                return new Response<PersonDto>() { isSuccess = true, Data = null, List = listDto, Message = "Success", Status = 200 };
 
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
             }
         }
 
-        public Task<Person> GetPersonById(int id)
+        public async Task<Response<PersonDto>> GetPersonById(int id)
         {
             try
             {
                 if (id <= 0)
-                    throw new Exception("Bir hata oluştu!");
+                    return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Id is not valid", Status = 500 };
 
-                //Person person = await _personRepository.GetByIdAsync(id);
-                //return person;
 
-                Person person = _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefault();
 
-                return Task.FromResult(person);
+
+                Person person = await _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefaultAsync();
+                if (person != null)
+                {
+                    PersonDto personDto = new PersonDto()
+                    {
+                        CreatedDate = person.CreatedDate,
+                        Name = person.Name,
+                        Surname = person.Surname,
+                        Status = person.Status,
+                        Information = new List<InformationDto>(),
+                    };
+
+
+                    foreach (var item in person.Information)
+                    {
+                        InformationDto informationDto = new InformationDto()
+                        {
+                            CreatedDate = item.CreatedDate,
+                            Detail = item.Detail,
+                            Email = item.Email,
+                            Location = item.Location,
+                            PersonId = item.PersonId,
+                            Phone = item.Phone,
+                            Status = item.Status
+                        };
+                        personDto.Information.Add(informationDto);
+                    }
+                    return new Response<PersonDto>() { isSuccess = true, Data = personDto, List = null, Message = "No user found", Status = 200 };
+                }
+
+                else
+                    return new Response<PersonDto>() { isSuccess = true, Data = null, List = null, Message = "No user found", Status = 200 };
+
 
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
             }
         }
 

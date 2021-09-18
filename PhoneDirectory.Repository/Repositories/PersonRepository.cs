@@ -11,28 +11,13 @@ namespace PhoneDirectory.Repository.Repositories
 {
     public class PersonRepository : Repository<Person>, IPersonRepository
     {
+        private readonly PhoneDirectoryDbContext dbContext;
         public PersonRepository(PhoneDirectoryDbContext context)
             : base(context)
         {
+            dbContext = context;
         }
 
-     
-
-       public async Task DeletePerson(int id)
-        {
-            try
-            {
-                Person person = await FindBy(x=> x.Id == id).FirstOrDefaultAsync();
-
-                if (person != null)
-                    person.Status = 0;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
+  
     }
 }

@@ -9,6 +9,5 @@ namespace PhoneDirectory.Repository.IRepositories
     public interface IPersonRepository : IRepository<Person>
     {
 
-        Task DeletePerson(int id);
     }
 }

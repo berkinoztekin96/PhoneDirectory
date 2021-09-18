@@ -18,8 +18,9 @@ namespace PhoneDirectory.Entities.Entities
         [StringLength(50)]
         public string Surname { get; set; }
 
-        public virtual Information Information { get; set; }
-
         public int Status { get; set; }
+        public virtual ICollection<Information> Information { get; set; }
+
+     
     }
 }

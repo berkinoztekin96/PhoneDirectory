@@ -21,9 +21,11 @@ namespace PhoneDirectory.Entities.Entities
         public string Detail { get; set; } // Information Content
 
         public int Status { get; set; }
-
-        public virtual Person Person { get; set; }
         [ForeignKey("Person")]
         public int PersonId { get; set; }
+
+        public virtual Person Person { get; set; }
+
+
     }
 }

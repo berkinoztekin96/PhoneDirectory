@@ -15,6 +15,6 @@ namespace PhoneDirectory.Common.Dto.Person
 
         public int Status { get; set; }
 
-        public InformationDto Information { get; set; }
+        public ICollection<InformationDto> Information { get; set; }
     }
 }

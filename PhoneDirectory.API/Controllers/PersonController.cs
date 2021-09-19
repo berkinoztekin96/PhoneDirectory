@@ -55,6 +55,8 @@ namespace PhoneDirectory.API.Controllers
             if (!helper.IsValidMail(dto.Email))
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
 
+            if(!helper.IsPhoneNumber(dto.Phone))
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid", Status = 200 };
 
 
             var serviceResult = await _personService.CreatePerson(dto);

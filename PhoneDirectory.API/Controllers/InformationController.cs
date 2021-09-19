@@ -112,6 +112,9 @@ namespace PhoneDirectory.API.Controllers
             if (!helper.IsValidMail(dto.Email))
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
 
+            if (!helper.IsPhoneNumber(dto.Phone))
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid ", Status = 200 };
+
 
 
             var serviceResult = await _informationService.CreateInformation(dto);
@@ -246,8 +249,11 @@ namespace PhoneDirectory.API.Controllers
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Location or phone cannot be empty", Status = 500 };
 
 
-            else if (!helper.IsValidMail(dto.Email))
+             if (!helper.IsValidMail(dto.Email))
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
+
+            if (!helper.IsPhoneNumber(dto.Phone))
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid ", Status = 200 };
 
             var serviceResult = await _informationService.UpdateInformation(dto);
 

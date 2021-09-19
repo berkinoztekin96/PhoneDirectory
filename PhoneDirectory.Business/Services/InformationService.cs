@@ -106,7 +106,7 @@ namespace PhoneDirectory.Business.Services
                         Location = information.Location,
                         PersonId = information.PersonId,
                         Phone = information.Phone,
-                        Status = 1
+                        Status = 0
                     };
 
 

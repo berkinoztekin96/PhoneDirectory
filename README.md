@@ -32,3 +32,5 @@ And finally, Use the package manager console to execute the migration after sele
 
 ```bash
 update-database
+```
+-Change your connection string in appsettings.json

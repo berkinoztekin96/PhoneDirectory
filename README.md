@@ -1,5 +1,5 @@
 # PhoneDirectory
-
+- .Net Core 3.1 version and relevant libraries are used in this project
 - PhoneDirectory project has 5 main layers
 - Postman collection v2.1 is available as PhoneDirectory.postman_collection.json. To access all end points kindly import the json file
 - All migration files is inside of Repository Layer

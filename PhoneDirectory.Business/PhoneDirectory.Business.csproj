@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PhoneDirectory.Common\PhoneDirectory.Common.csproj" />
+    <ProjectReference Include="..\PhoneDirectory.Entities\PhoneDirectory.Entities.csproj" />
+    <ProjectReference Include="..\PhoneDirectory.Repository\PhoneDirectory.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

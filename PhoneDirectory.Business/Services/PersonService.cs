@@ -208,13 +208,9 @@ namespace PhoneDirectory.Business.Services
 
 
 
-                Person person = await _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefaultAsync();
+                Person person = await _personRepository.FindBy(x => x.Id == id && x.Status == 1, x => x.Information).FirstOrDefaultAsync();
                 if (person != null)
-                {
-                    if(person.Status == 0)
-                        return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "No user found", Status = 200 };
-
-
+                {            
                     PersonDto personDto = new PersonDto()
                     {
                         CreatedDate = person.CreatedDate,

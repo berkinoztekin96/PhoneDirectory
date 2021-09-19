@@ -103,7 +103,7 @@ namespace PhoneDirectory.API.Controllers
         }
 
         [HttpPost("CreateInformation")]
-        public async Task<Response<InformationDto>> CreatePerson(CreateInformationDto dto)
+        public async Task<Response<InformationDto>> CreateInformation(CreateInformationDto dto)
         {
             RegexHelper helper = new RegexHelper();
             if (String.IsNullOrEmpty(dto.Location) && String.IsNullOrEmpty(dto.Phone))
@@ -119,18 +119,27 @@ namespace PhoneDirectory.API.Controllers
             if (serviceResult.isSuccess)
             {
                 #region Redis update
-                byte[] personListFromCache = null;
-                string cacheJsonItem;
+                try
+                {
 
-                serviceResult.List = new List<InformationDto>();  //Added dto to list because in redis, I hold the type of serviceResult.List in redis
-                serviceResult.List.Add(serviceResult.Data);
 
-                cacheJsonItem = JsonConvert.SerializeObject(serviceResult.List);
-                personListFromCache = Encoding.UTF8.GetBytes(cacheJsonItem);
-                var options = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromDays(1))
-                    .SetAbsoluteExpiration(DateTime.Now.AddHours(10));
-                await _redisDistributedCache.SetAsync("Informations", personListFromCache, options);
+                    byte[] personListFromCache = null;
+                    string cacheJsonItem;
+
+                    serviceResult.List = new List<InformationDto>();  //Added dto to list because in redis, I hold the type of serviceResult.List in redis
+                    serviceResult.List.Add(serviceResult.Data);
+
+                    cacheJsonItem = JsonConvert.SerializeObject(serviceResult.List);
+                    personListFromCache = Encoding.UTF8.GetBytes(cacheJsonItem);
+                    var options = new DistributedCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromDays(1))
+                        .SetAbsoluteExpiration(DateTime.Now.AddHours(10));
+                    await _redisDistributedCache.SetAsync("Informations", personListFromCache, options);
+                }
+                catch (Exception)
+                {
+
+                }
                 #endregion
 
                 return new Response<InformationDto>() { isSuccess = true, Data = serviceResult.Data, List = null, Message = "Success", Status = serviceResult.Status };
@@ -141,7 +150,7 @@ namespace PhoneDirectory.API.Controllers
         }
 
         [HttpDelete("DeleteInformation/{id}")]
-        public async Task<Response<InformationDto>> DeletePerson(int id)
+        public async Task<Response<InformationDto>> DeleteInformation(int id)
         {
 
             var serviceResult = await _informationService.DeleteInformation(id);
@@ -149,19 +158,28 @@ namespace PhoneDirectory.API.Controllers
             if (serviceResult.isSuccess)
             {
                 #region Redis update
-                byte[] personListFromCache = null;
-                string cacheJsonItem;
+                try
+                {
 
 
-                serviceResult.List = new List<InformationDto>();  //Added dto to list because in redis, I hold the type of serviceResult.List in redis
-                serviceResult.List.Add(serviceResult.Data);
+                    byte[] personListFromCache = null;
+                    string cacheJsonItem;
 
-                cacheJsonItem = JsonConvert.SerializeObject(serviceResult.List);
-                personListFromCache = Encoding.UTF8.GetBytes(cacheJsonItem);
-                var options = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromDays(1))
-                    .SetAbsoluteExpiration(DateTime.Now.AddHours(10));
-                await _redisDistributedCache.SetAsync("Informations", personListFromCache, options);
+
+                    serviceResult.List = new List<InformationDto>();  //Added dto to list because in redis, I hold the type of serviceResult.List in redis
+                    serviceResult.List.Add(serviceResult.Data);
+
+                    cacheJsonItem = JsonConvert.SerializeObject(serviceResult.List);
+                    personListFromCache = Encoding.UTF8.GetBytes(cacheJsonItem);
+                    var options = new DistributedCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromDays(1))
+                        .SetAbsoluteExpiration(DateTime.Now.AddHours(10));
+                    await _redisDistributedCache.SetAsync("Informations", personListFromCache, options);
+                }
+                catch (Exception)
+                {
+
+                }
                 #endregion
 
                 return new Response<InformationDto>() { isSuccess = true, Data = serviceResult.Data, List = null, Message = "Success", Status = serviceResult.Status };
@@ -173,7 +191,7 @@ namespace PhoneDirectory.API.Controllers
 
 
         [HttpPut("UpdateInformation")]
-        public async Task<Response<InformationDto>> UpdatePerson([FromBody] UpdateInformationDto dto)
+        public async Task<Response<InformationDto>> UpdateInformation([FromBody] UpdateInformationDto dto)
         {
             RegexHelper helper = new RegexHelper();
 

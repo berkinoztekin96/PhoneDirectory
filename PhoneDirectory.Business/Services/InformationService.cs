@@ -85,10 +85,11 @@ namespace PhoneDirectory.Business.Services
 
             try
             {
-                Information information = await _informationRepository.DeleteInformation(id);
+                Information information = await _informationRepository.FindBy(x=> x.Id == id && x.Status == 1).FirstOrDefaultAsync();
 
                 if (information != null)
                 {
+                    information.Status = 0;
                     await dbContext.SaveChangesAsync();
 
                     Person person = await _personRepository.FindBy(x => x.Id == information.PersonId).FirstOrDefaultAsync();

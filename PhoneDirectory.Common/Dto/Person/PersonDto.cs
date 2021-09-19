@@ -13,6 +13,8 @@ namespace PhoneDirectory.Common.Dto.Person
    
         public string Surname { get; set; }
 
+        public string CompanyName { get; set; }
+
         public int Status { get; set; }
 
         public ICollection<InformationDto> Information { get; set; }

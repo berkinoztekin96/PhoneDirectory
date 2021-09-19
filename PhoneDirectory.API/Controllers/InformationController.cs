@@ -109,7 +109,7 @@ namespace PhoneDirectory.API.Controllers
             if (String.IsNullOrEmpty(dto.Location) && String.IsNullOrEmpty(dto.Phone))
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Location or phone cannot be empty!", Status = 200 };
 
-            else if (!helper.IsValidMail(dto.Email))
+            if (!helper.IsValidMail(dto.Email))
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
 
 

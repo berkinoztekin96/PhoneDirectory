@@ -52,7 +52,7 @@ namespace PhoneDirectory.API.Controllers
             if (String.IsNullOrEmpty(dto.Name) && String.IsNullOrEmpty(dto.Surname))
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Name or surname cannot be empty!", Status = 200 };
 
-            else if (!helper.IsValidMail(dto.Email))
+             if (!helper.IsValidMail(dto.Email))
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
 
 
@@ -62,6 +62,10 @@ namespace PhoneDirectory.API.Controllers
             if (serviceResult.isSuccess)
             {
                 #region Redis update
+                try
+                {
+
+               
                 byte[] personListFromCache = null;
                 string cacheJsonItem;
 
@@ -74,6 +78,12 @@ namespace PhoneDirectory.API.Controllers
                     .SetSlidingExpiration(TimeSpan.FromDays(1))
                     .SetAbsoluteExpiration(DateTime.Now.AddHours(10));
                 await _redisDistributedCache.SetAsync("Persons", personListFromCache, options);
+                }
+                catch (Exception ex)
+                {
+
+
+                }
                 #endregion
 
                 return new Response<PersonDto>() { isSuccess = true, Data = serviceResult.Data, List = null, Message = "Success", Status = serviceResult.Status };

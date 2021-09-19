@@ -37,7 +37,8 @@ namespace PhoneDirectory.Business.Services
                         CreatedDate = DateTime.Now,
                         Name = dto.Name,
                         Surname = dto.Surname,
-                        Status = 1
+                        Status = 1,
+                        CompanyName = dto.CompanyName
                     };
 
                     await _personRepository.CreateAsync(person);
@@ -77,7 +78,8 @@ namespace PhoneDirectory.Business.Services
                         Surname = person.Surname,
                         Information = informationList,
                         CreatedDate = person.CreatedDate,
-                        Status = person.Status
+                        Status = person.Status,
+                        CompanyName = person.CompanyName
                     };
 
 
@@ -116,6 +118,7 @@ namespace PhoneDirectory.Business.Services
                     Surname = person.Surname,
                     Status = person.Status,
                     Information = new List<InformationDto>(),
+                    CompanyName = person.CompanyName
                 };
                 foreach (var item in person.Information)
                 {
@@ -164,7 +167,8 @@ namespace PhoneDirectory.Business.Services
                         Information = new List<InformationDto>(),
                         Name = person.Name,
                         Surname = person.Surname,
-                        Status = person.Status
+                        Status = person.Status,
+                        CompanyName = person.CompanyName
                     };
 
                     foreach (var item in person.Information)
@@ -218,6 +222,7 @@ namespace PhoneDirectory.Business.Services
                         Surname = person.Surname,
                         Status = person.Status,
                         Information = new List<InformationDto>(),
+                        CompanyName = person.CompanyName
                     };
 
 
@@ -264,6 +269,7 @@ namespace PhoneDirectory.Business.Services
 
                 person.Name = dto.Name;
                 person.Surname = dto.Surname;
+                person.CompanyName = dto.CompanyName;
 
                 await dbContext.SaveChangesAsync();
 
@@ -274,6 +280,7 @@ namespace PhoneDirectory.Business.Services
                     Surname = person.Surname,
                     Status = person.Status,
                     Information = new List<InformationDto>(),
+                    CompanyName = person.CompanyName
                 };
 
 

@@ -54,6 +54,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         PersonId = person.Id,
@@ -85,7 +86,7 @@ namespace PhoneDirectory.Business.Services
 
             try
             {
-                Information information = await _informationRepository.FindBy(x=> x.Id == id && x.Status == 1).FirstOrDefaultAsync();
+                Information information = await _informationRepository.FindBy(x => x.Id == id && x.Status == 1).FirstOrDefaultAsync();
 
                 if (information != null)
                 {
@@ -99,6 +100,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         CreatedDate = information.CreatedDate,
@@ -143,6 +145,7 @@ namespace PhoneDirectory.Business.Services
                         {
                             InformationDto dto = new InformationDto()
                             {
+                                Id = item.Id,
                                 PersonName = person.Name,
                                 PersonSurname = person.Surname,
                                 CreatedDate = item.CreatedDate,
@@ -188,6 +191,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto dto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         CreatedDate = information.CreatedDate,
@@ -219,7 +223,7 @@ namespace PhoneDirectory.Business.Services
         {
             try
             {
-                Information information = await _informationRepository.FindBy(x => x.Id == dto.Id && x.Status == 1, x=> x.Person).FirstOrDefaultAsync();
+                Information information = await _informationRepository.FindBy(x => x.Id == dto.Id && x.Status == 1, x => x.Person).FirstOrDefaultAsync();
                 if (information == null)
                     return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Information could not found", Status = 200 };
 
@@ -234,6 +238,7 @@ namespace PhoneDirectory.Business.Services
 
                 InformationDto resultDto = new InformationDto()
                 {
+                    Id = information.Id,
                     PersonName = information.Person.Name,
                     PersonSurname = information.Person.Surname,
                     CreatedDate = information.CreatedDate,

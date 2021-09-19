@@ -6,7 +6,7 @@ namespace PhoneDirectory.Common.Dto.Information
 {
     public class InformationDto
     {
-
+        public int Id{ get; set; }
         public string PersonName { get; set; }
         public string PersonSurname { get; set; }
         public int PersonId { get; set; }

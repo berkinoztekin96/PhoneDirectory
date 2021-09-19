@@ -62,6 +62,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         CreatedDate = information.CreatedDate,
@@ -77,6 +78,7 @@ namespace PhoneDirectory.Business.Services
                     informationList.Add(informationDto);
                     PersonDto returnDto = new PersonDto()
                     {
+                        Id = person.Id,
                         Name = person.Name,
                         Surname = person.Surname,
                         Information = informationList,
@@ -116,6 +118,7 @@ namespace PhoneDirectory.Business.Services
                 person.Status = 0;
                 PersonDto personDto = new PersonDto()
                 {
+                    Id = person.Id,
                     CreatedDate = person.CreatedDate,
                     Name = person.Name,
                     Surname = person.Surname,
@@ -130,6 +133,9 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = item.Id,
+                        PersonName = person.Name,
+                        PersonSurname = person.Surname,
                         CreatedDate = item.CreatedDate,
                         Detail = item.Detail,
                         Email = item.Email,
@@ -166,6 +172,7 @@ namespace PhoneDirectory.Business.Services
                 {
                     PersonDto personDto = new PersonDto()
                     {
+                        Id = person.Id,
                         CreatedDate = person.CreatedDate,
                         Information = new List<InformationDto>(),
                         Name = person.Name,
@@ -180,6 +187,7 @@ namespace PhoneDirectory.Business.Services
                         {
                             InformationDto informationDto = new InformationDto()
                             {
+                                Id = item.Id,
                                 PersonName = person.Name,
                                 PersonSurname = person.Surname,
                                 CreatedDate = item.CreatedDate,
@@ -222,6 +230,7 @@ namespace PhoneDirectory.Business.Services
                 {
                     PersonDto personDto = new PersonDto()
                     {
+                        Id = person.Id,
                         CreatedDate = person.CreatedDate,
                         Name = person.Name,
                         Surname = person.Surname,
@@ -237,6 +246,7 @@ namespace PhoneDirectory.Business.Services
                         {
                             InformationDto informationDto = new InformationDto()
                             {
+                                Id = item.Id,
                                 PersonName = person.Name,
                                 PersonSurname = person.Surname,
                                 CreatedDate = item.CreatedDate,
@@ -282,6 +292,7 @@ namespace PhoneDirectory.Business.Services
 
                 PersonDto personDto = new PersonDto()
                 {
+                    Id = person.Id,
                     CreatedDate = person.CreatedDate,
                     Name = person.Name,
                     Surname = person.Surname,
@@ -299,8 +310,9 @@ namespace PhoneDirectory.Business.Services
 
                         InformationDto informationDto = new InformationDto()
                         {
-                            PersonName = person.Name,
-                            PersonSurname = person.Surname,
+                            Id = item.Id,
+                            PersonName = dto.Name,
+                            PersonSurname = dto.Surname,
                             CreatedDate = item.CreatedDate,
                             Detail = item.Detail,
                             Email = item.Email,
@@ -314,7 +326,7 @@ namespace PhoneDirectory.Business.Services
                 }
 
 
-                return new Response<PersonDto>() { isSuccess = false, Data = personDto, List = null, Message = "Success", Status = 200 };
+                return new Response<PersonDto>() { isSuccess = true, Data = personDto, List = null, Message = "Success", Status = 200 };
 
 
 

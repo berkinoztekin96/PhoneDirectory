@@ -39,8 +39,14 @@ namespace PhoneDirectory.API
             services.AddScoped<IInformationRepository, InformationRepository>();
             //Services
 
+
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IInformationService, InformationService>();
+
+
+            //Redis
+            string connectionRedis = Configuration.GetConnectionString("DefaultRedisConnection");
+            services.AddDistributedRedisCache(action => { action.Configuration = connectionRedis; });
 
             services.AddSwaggerGen(c =>
             {

@@ -11,9 +11,11 @@ namespace PhoneDirectory.Repository.Repositories
 {
     public class InformationRepository : Repository<Information>, IInformationRepository
     {
+        private readonly PhoneDirectoryDbContext dbContext;
         public InformationRepository(PhoneDirectoryDbContext context)
             : base(context)
         {
+            dbContext = context;
         }
 
 
@@ -31,20 +33,20 @@ namespace PhoneDirectory.Repository.Repositories
             }
         }
 
-        public async Task<bool> DeleteInformation(int id) // soft delete
+        public async Task<Information> DeleteInformation(int id) // soft delete
         {
             try
             {
-                Information information = await GetAllAsync().Where(x => x.Id == id).FirstOrDefaultAsync();
+                Information information = await dbContext.Informations.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 if (information != null)
                 {
                     information.Status = 0;
-                    return true;
+                    return information;
                 }
 
                 else
-                    return false;
+                    return null;
                     
 
             }

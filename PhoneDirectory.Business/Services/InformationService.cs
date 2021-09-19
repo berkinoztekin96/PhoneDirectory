@@ -266,6 +266,55 @@ namespace PhoneDirectory.Business.Services
 
         }
 
+        public async Task<Response<LocationInformationDto>> LocationInformationReport()
+        {
+
+            try
+            {
+
+                List<LocationInformationDto> listDto = new List<LocationInformationDto>();
+                List<string> locationList = new List<string>();
+                var informationList = await _informationRepository.FindBy(x => x.Status == 1).ToListAsync();
+
+
+                foreach (var item in informationList)
+                {
+                    var check = locationList.Where(x => x.Equals(item.Location.ToUpper()));
+                    if (check.Count() <= 0)
+                    {
+
+                        LocationInformationDto dto = new LocationInformationDto()
+                        {
+                            LocationName = item.Location.ToUpper(),
+                            PersonNumberCount = 1,
+                            PhoneNumberCount = 1,
+                        };
+                        locationList.Add(item.Location.ToUpper());
+                        listDto.Add(dto);
+                    }
+
+                    else
+                    {
+                        foreach (var location in listDto.Where(x => x.LocationName == item.Location.ToUpper()))
+                        {
+                            location.PersonNumberCount++;
+                            location.PhoneNumberCount++;
+                        }
+
+                    }
+                }
+                listDto = listDto.OrderByDescending(x => x.PersonNumberCount).ToList();
+                return new Response<LocationInformationDto>() { isSuccess = true, Data = null, List = listDto, Message = "Success", Status = 200 };
+            }
+            catch (Exception ex)
+            {
+
+                return new Response<LocationInformationDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
+            }
+
+
+        }
+
 
     }
 

@@ -315,5 +315,19 @@ namespace PhoneDirectory.API.Controllers
 
         }
 
+
+        [HttpGet("LocationInformationReport")]
+        public async Task<Response<LocationInformationDto>> LocationInformationReport()
+        {
+
+            var serviceResult = await _informationService.LocationInformationReport();
+            
+            if(serviceResult.isSuccess)
+                return new Response<LocationInformationDto>() { isSuccess = true, Data = null, List = serviceResult.List, Message = serviceResult.Message, Status = serviceResult.Status };
+
+            else
+                return new Response<LocationInformationDto>() { isSuccess = false, Data = null, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
+
+        }
     }
 }

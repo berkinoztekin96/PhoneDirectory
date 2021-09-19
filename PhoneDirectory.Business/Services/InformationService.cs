@@ -54,6 +54,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         PersonId = person.Id,
@@ -85,10 +86,11 @@ namespace PhoneDirectory.Business.Services
 
             try
             {
-                Information information = await _informationRepository.DeleteInformation(id);
+                Information information = await _informationRepository.FindBy(x => x.Id == id && x.Status == 1).FirstOrDefaultAsync();
 
                 if (information != null)
                 {
+                    information.Status = 0;
                     await dbContext.SaveChangesAsync();
 
                     Person person = await _personRepository.FindBy(x => x.Id == information.PersonId).FirstOrDefaultAsync();
@@ -98,6 +100,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         CreatedDate = information.CreatedDate,
@@ -142,6 +145,7 @@ namespace PhoneDirectory.Business.Services
                         {
                             InformationDto dto = new InformationDto()
                             {
+                                Id = item.Id,
                                 PersonName = person.Name,
                                 PersonSurname = person.Surname,
                                 CreatedDate = item.CreatedDate,
@@ -187,6 +191,7 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto dto = new InformationDto()
                     {
+                        Id = information.Id,
                         PersonName = person.Name,
                         PersonSurname = person.Surname,
                         CreatedDate = information.CreatedDate,
@@ -218,7 +223,7 @@ namespace PhoneDirectory.Business.Services
         {
             try
             {
-                Information information = await _informationRepository.FindBy(x => x.Id == dto.Id && x.Status == 1, x=> x.Person).FirstOrDefaultAsync();
+                Information information = await _informationRepository.FindBy(x => x.Id == dto.Id && x.Status == 1, x => x.Person).FirstOrDefaultAsync();
                 if (information == null)
                     return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Information could not found", Status = 200 };
 
@@ -233,6 +238,7 @@ namespace PhoneDirectory.Business.Services
 
                 InformationDto resultDto = new InformationDto()
                 {
+                    Id = information.Id,
                     PersonName = information.Person.Name,
                     PersonSurname = information.Person.Surname,
                     CreatedDate = information.CreatedDate,
@@ -255,6 +261,55 @@ namespace PhoneDirectory.Business.Services
             {
 
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
+            }
+
+
+        }
+
+        public async Task<Response<LocationInformationDto>> LocationInformationReport()
+        {
+
+            try
+            {
+
+                List<LocationInformationDto> listDto = new List<LocationInformationDto>();
+                List<string> locationList = new List<string>();
+                var informationList = await _informationRepository.FindBy(x => x.Status == 1).ToListAsync();
+
+
+                foreach (var item in informationList)
+                {
+                    var check = locationList.Where(x => x.Equals(item.Location.ToUpper()));
+                    if (check.Count() <= 0)
+                    {
+
+                        LocationInformationDto dto = new LocationInformationDto()
+                        {
+                            LocationName = item.Location.ToUpper(),
+                            PersonNumberCount = 1,
+                            PhoneNumberCount = 1,
+                        };
+                        locationList.Add(item.Location.ToUpper());
+                        listDto.Add(dto);
+                    }
+
+                    else
+                    {
+                        foreach (var location in listDto.Where(x => x.LocationName == item.Location.ToUpper()))
+                        {
+                            location.PersonNumberCount++;
+                            location.PhoneNumberCount++;
+                        }
+
+                    }
+                }
+                listDto = listDto.OrderByDescending(x => x.PersonNumberCount).ToList();
+                return new Response<LocationInformationDto>() { isSuccess = true, Data = null, List = listDto, Message = "Success", Status = 200 };
+            }
+            catch (Exception ex)
+            {
+
+                return new Response<LocationInformationDto>() { isSuccess = false, Data = null, List = null, Message = ex.Message, Status = 500 };
             }
 
 

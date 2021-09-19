@@ -12,6 +12,7 @@ namespace PhoneDirectory.Common.Dto.Person
         public string Phone { get; set; }
         public string Location { get; set; }
         public string Detail { get; set; }
+        public string CompanyName { get; set; }
 
     }
 }

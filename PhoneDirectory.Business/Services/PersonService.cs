@@ -37,13 +37,15 @@ namespace PhoneDirectory.Business.Services
                         CreatedDate = DateTime.Now,
                         Name = dto.Name,
                         Surname = dto.Surname,
-                        Status = 1
+                        Status = 1,
+                        CompanyName = dto.CompanyName
                     };
 
                     await _personRepository.CreateAsync(person);
 
                     Information information = new Information()
                     {
+
                         CreatedDate = DateTime.Now,
                         Detail = dto.Detail,
                         Email = dto.Email,
@@ -60,6 +62,9 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = information.Id,
+                        PersonName = person.Name,
+                        PersonSurname = person.Surname,
                         CreatedDate = information.CreatedDate,
                         Detail = information.Detail,
                         Email = information.Email,
@@ -73,11 +78,13 @@ namespace PhoneDirectory.Business.Services
                     informationList.Add(informationDto);
                     PersonDto returnDto = new PersonDto()
                     {
+                        Id = person.Id,
                         Name = person.Name,
                         Surname = person.Surname,
                         Information = informationList,
                         CreatedDate = person.CreatedDate,
-                        Status = person.Status
+                        Status = person.Status,
+                        CompanyName = person.CompanyName
                     };
 
 
@@ -100,22 +107,24 @@ namespace PhoneDirectory.Business.Services
             try
             {
 
-                Person person = await _personRepository.FindBy(x => x.Id == id, x => x.Information).FirstOrDefaultAsync();
+                Person person = await _personRepository.FindBy(x => x.Id == id && x.Status == 1, x => x.Information).FirstOrDefaultAsync();
                 if (person == null)
                     return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Person could not found", Status = 200 };
 
-                if(person.Status == 0)
+                if (person.Status == 0)
                     return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Person is already deleted!", Status = 200 };
 
 
                 person.Status = 0;
                 PersonDto personDto = new PersonDto()
                 {
+                    Id = person.Id,
                     CreatedDate = person.CreatedDate,
                     Name = person.Name,
                     Surname = person.Surname,
                     Status = person.Status,
                     Information = new List<InformationDto>(),
+                    CompanyName = person.CompanyName
                 };
                 foreach (var item in person.Information)
                 {
@@ -124,6 +133,9 @@ namespace PhoneDirectory.Business.Services
 
                     InformationDto informationDto = new InformationDto()
                     {
+                        Id = item.Id,
+                        PersonName = person.Name,
+                        PersonSurname = person.Surname,
                         CreatedDate = item.CreatedDate,
                         Detail = item.Detail,
                         Email = item.Email,
@@ -160,11 +172,13 @@ namespace PhoneDirectory.Business.Services
                 {
                     PersonDto personDto = new PersonDto()
                     {
+                        Id = person.Id,
                         CreatedDate = person.CreatedDate,
                         Information = new List<InformationDto>(),
                         Name = person.Name,
                         Surname = person.Surname,
-                        Status = person.Status
+                        Status = person.Status,
+                        CompanyName = person.CompanyName
                     };
 
                     foreach (var item in person.Information)
@@ -173,6 +187,9 @@ namespace PhoneDirectory.Business.Services
                         {
                             InformationDto informationDto = new InformationDto()
                             {
+                                Id = item.Id,
+                                PersonName = person.Name,
+                                PersonSurname = person.Surname,
                                 CreatedDate = item.CreatedDate,
                                 Detail = item.Detail,
                                 Email = item.Email,
@@ -210,14 +227,16 @@ namespace PhoneDirectory.Business.Services
 
                 Person person = await _personRepository.FindBy(x => x.Id == id && x.Status == 1, x => x.Information).FirstOrDefaultAsync();
                 if (person != null)
-                {            
+                {
                     PersonDto personDto = new PersonDto()
                     {
+                        Id = person.Id,
                         CreatedDate = person.CreatedDate,
                         Name = person.Name,
                         Surname = person.Surname,
                         Status = person.Status,
                         Information = new List<InformationDto>(),
+                        CompanyName = person.CompanyName
                     };
 
 
@@ -227,6 +246,9 @@ namespace PhoneDirectory.Business.Services
                         {
                             InformationDto informationDto = new InformationDto()
                             {
+                                Id = item.Id,
+                                PersonName = person.Name,
+                                PersonSurname = person.Surname,
                                 CreatedDate = item.CreatedDate,
                                 Detail = item.Detail,
                                 Email = item.Email,
@@ -258,22 +280,25 @@ namespace PhoneDirectory.Business.Services
 
             try
             {
-                Person person = await _personRepository.FindBy(x => x.Id == dto.Id, x => x.Information).FirstOrDefaultAsync();
+                Person person = await _personRepository.FindBy(x => x.Id == dto.Id && x.Status == 1, x => x.Information).FirstOrDefaultAsync();
                 if (person == null)
                     return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Person could not found", Status = 200 };
 
                 person.Name = dto.Name;
                 person.Surname = dto.Surname;
+                person.CompanyName = dto.CompanyName;
 
                 await dbContext.SaveChangesAsync();
 
                 PersonDto personDto = new PersonDto()
                 {
+                    Id = person.Id,
                     CreatedDate = person.CreatedDate,
                     Name = person.Name,
                     Surname = person.Surname,
                     Status = person.Status,
                     Information = new List<InformationDto>(),
+                    CompanyName = person.CompanyName
                 };
 
 
@@ -285,6 +310,9 @@ namespace PhoneDirectory.Business.Services
 
                         InformationDto informationDto = new InformationDto()
                         {
+                            Id = item.Id,
+                            PersonName = dto.Name,
+                            PersonSurname = dto.Surname,
                             CreatedDate = item.CreatedDate,
                             Detail = item.Detail,
                             Email = item.Email,
@@ -298,7 +326,7 @@ namespace PhoneDirectory.Business.Services
                 }
 
 
-                return new Response<PersonDto>() { isSuccess = false, Data = personDto, List = null, Message = "Success", Status = 200 };
+                return new Response<PersonDto>() { isSuccess = true, Data = personDto, List = null, Message = "Success", Status = 200 };
 
 
 

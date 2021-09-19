@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 namespace PhoneDirectory.Repository.IRepositories
 {
     public interface IInformationRepository : IRepository<Information>
-    {
-
-        //Task<Information> GetInformationByUserId(int personId);
-
-        Task<Information> DeleteInformation(int id);
+    {     
     }
 }

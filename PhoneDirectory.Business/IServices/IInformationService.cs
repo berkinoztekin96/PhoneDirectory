@@ -16,5 +16,7 @@ namespace PhoneDirectory.Business.IServices
         Task<Response<InformationDto>> CreateInformation(CreateInformationDto dto);
         Task<Response<InformationDto>> UpdateInformation(UpdateInformationDto dto);
         Task<Response<InformationDto>> DeleteInformation(int id);
+
+        Task<Response<LocationInformationDto>> LocationInformationReport();
     }
 }

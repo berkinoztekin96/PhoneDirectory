@@ -13,6 +13,9 @@ namespace PhoneDirectory.Common.Helper
         {
             try
             {
+                if (emailaddress == null)
+                    return false;
+
                 MailAddress m = new MailAddress(emailaddress);
 
                 return true;
@@ -25,6 +28,9 @@ namespace PhoneDirectory.Common.Helper
 
         public bool IsPhoneNumber(string phone)
         {
+            if (phone == null)
+                return false;
+
             string pattern = @"^(0(\d{3})(\d{3})(\d{2})(\d{2}))$";
             Match match = Regex.Match(phone, pattern, RegexOptions.IgnoreCase);
 

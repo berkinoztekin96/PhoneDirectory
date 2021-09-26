@@ -22,8 +22,8 @@
 
 # Unit Test
 
--Both PersonController and InformationController tested with unit test.
--Xunit and Moq libraries are used.
+- Both PersonController and InformationController tested with unit test.
+- Xunit and Moq libraries are used.
 
 # Before Run
 

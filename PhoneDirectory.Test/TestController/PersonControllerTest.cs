@@ -169,61 +169,6 @@ namespace PhoneDirectory.Test.TestController
 
 
         [Fact]
-        public async void CreatePersonWithNullEmailTest()
-        {
-            // arrange
-            var service = new Mock<IPersonService>();
-            var redis = new Mock<IDistributedCache>();
-            var controller = new PersonController(service.Object, redis.Object);
-            var fakePerson = new CreatePersonDto()
-            {
-                CompanyName = "TestCompany",
-                Detail = "Test Detail",
-                Email = null,
-                Location = "Test Location",
-                Name = "Test Name",
-                Phone = "05323414131",
-                Surname = "Test Surname"
-
-            };
-
-            // act
-            var result = await controller.CreatePerson(fakePerson);
-
-
-            // assert
-            Assert.Equal("Email address is not valid", result.Message);
-        }
-
-        [Fact]
-        public async void CreatePersonWithNullPhoneTest()
-        {
-            // arrange
-            var service = new Mock<IPersonService>();
-            var redis = new Mock<IDistributedCache>();
-            var controller = new PersonController(service.Object, redis.Object);
-            var fakePerson = new CreatePersonDto()
-            {
-                CompanyName = "TestCompany",
-                Detail = "Test Detail",
-                Email = "test@mail.com",
-                Location = "Test Location",
-                Name = "Test Name",
-                Phone = null,
-                Surname = "Test Surname"
-
-            };
-
-            // act
-            var result = await controller.CreatePerson(fakePerson);
-
-
-            // assert
-            Assert.Equal("Phone format is not valid", result.Message);
-        }
-
-
-        [Fact]
         public async void CreatePersonWithInvalidPhoneTest()
         {
             // arrange
@@ -235,6 +180,7 @@ namespace PhoneDirectory.Test.TestController
                 CompanyName = "TestCompany",
                 Detail = "Test Detail",
                 Email = "test@mail.com",
+
                 Location = "Test Location",
                 Name = "Test Name",
                 Phone = "3253253253",

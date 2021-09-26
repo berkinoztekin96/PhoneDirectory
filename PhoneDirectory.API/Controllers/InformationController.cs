@@ -47,7 +47,7 @@ namespace PhoneDirectory.API.Controllers
             {
                 informationListFromCache = null;
             }
-            if (informationListFromCache != null)
+            if (informationListFromCache != null && informationListFromCache.Length > 0)
             {
                 cacheJsonItem = Encoding.UTF8.GetString(informationListFromCache);
 
@@ -90,6 +90,8 @@ namespace PhoneDirectory.API.Controllers
         [HttpGet("GetInformation/{id}")]
         public async Task<Response<InformationDto>> Get(int id)
         {
+            if(id <= 0)
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500};
 
             var serviceResult = await _informationService.GetInformationById(id);
 
@@ -106,14 +108,14 @@ namespace PhoneDirectory.API.Controllers
         public async Task<Response<InformationDto>> CreateInformation(CreateInformationDto dto)
         {
             RegexHelper helper = new RegexHelper();
-            if (String.IsNullOrEmpty(dto.Location) && String.IsNullOrEmpty(dto.Phone))
-                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Location or phone cannot be empty!", Status = 200 };
+            if (String.IsNullOrEmpty(dto.Location) || String.IsNullOrEmpty(dto.Phone))
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Location or phone cannot be empty!", Status = 500 };
 
             if (!helper.IsValidMail(dto.Email))
-                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid", Status = 500 };
 
             if (!helper.IsPhoneNumber(dto.Phone))
-                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid ", Status = 200 };
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid", Status = 500 };
 
 
 
@@ -136,7 +138,7 @@ namespace PhoneDirectory.API.Controllers
                 {
                     informationListFromCache = null;
                 }
-                if (informationListFromCache != null)
+                if (informationListFromCache != null && informationListFromCache.Length > 0)
                 {
                     cacheJsonItem = Encoding.UTF8.GetString(informationListFromCache);
 
@@ -180,6 +182,8 @@ namespace PhoneDirectory.API.Controllers
         [HttpDelete("DeleteInformation/{id}")]
         public async Task<Response<InformationDto>> DeleteInformation(int id)
         {
+            if (id <= 0)
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500 };
 
             var serviceResult = await _informationService.DeleteInformation(id);
 
@@ -200,7 +204,7 @@ namespace PhoneDirectory.API.Controllers
                 {
                     informationListFromCache = null;
                 }
-                if (informationListFromCache != null)
+                if (informationListFromCache != null && informationListFromCache.Length > 0)
                 {
                     cacheJsonItem = Encoding.UTF8.GetString(informationListFromCache);
 
@@ -245,15 +249,15 @@ namespace PhoneDirectory.API.Controllers
         {
             RegexHelper helper = new RegexHelper();
 
-            if (String.IsNullOrEmpty(dto.Location) && String.IsNullOrEmpty(dto.Phone))
+            if (String.IsNullOrEmpty(dto.Location) || String.IsNullOrEmpty(dto.Phone))
                 return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Location or phone cannot be empty", Status = 500 };
 
 
              if (!helper.IsValidMail(dto.Email))
-                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid", Status = 500 };
 
             if (!helper.IsPhoneNumber(dto.Phone))
-                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid ", Status = 200 };
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid", Status = 500 };
 
             var serviceResult = await _informationService.UpdateInformation(dto);
 
@@ -274,7 +278,7 @@ namespace PhoneDirectory.API.Controllers
                 {
                     informationListFromCache = null;
                 }
-                if (informationListFromCache != null)
+                if (informationListFromCache != null && informationListFromCache.Length > 0)
                 {
                     cacheJsonItem = Encoding.UTF8.GetString(informationListFromCache);
 
@@ -312,7 +316,7 @@ namespace PhoneDirectory.API.Controllers
                 }
                 #endregion
 
-                return new Response<InformationDto>() { isSuccess = false, Data = serviceResult.Data, List = null, Message = "Name or surname cannot be empty", Status = serviceResult.Status };
+                return new Response<InformationDto>() { isSuccess = true, Data = serviceResult.Data, List = null, Message = serviceResult.Message, Status = serviceResult.Status };
             }
 
             else

@@ -33,6 +33,9 @@ namespace PhoneDirectory.API.Controllers
         public async Task<Response<PersonDto>> Get(int id)
         {
 
+            if(id <= 0)
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500};
+
             var serviceResult = await _personService.GetPersonById(id);
 
             if (serviceResult.isSuccess)
@@ -49,11 +52,11 @@ namespace PhoneDirectory.API.Controllers
         public async Task<Response<PersonDto>> CreatePerson(CreatePersonDto dto)
         {
             RegexHelper helper = new RegexHelper();
-            if (String.IsNullOrEmpty(dto.Name) && String.IsNullOrEmpty(dto.Surname))
+            if (String.IsNullOrEmpty(dto.Name) || String.IsNullOrEmpty(dto.Surname))
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Name or surname cannot be empty!", Status = 200 };
 
             if (!helper.IsValidMail(dto.Email))
-                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid ", Status = 200 };
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Email address is not valid", Status = 200 };
 
             if(!helper.IsPhoneNumber(dto.Phone))
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Phone format is not valid", Status = 200 };
@@ -78,7 +81,7 @@ namespace PhoneDirectory.API.Controllers
                 {
                     personListFromCache = null;
                 }
-                if (personListFromCache != null)
+                if (personListFromCache != null && personListFromCache.Length > 0)
                 {
                     cacheJsonItem = Encoding.UTF8.GetString(personListFromCache);
 
@@ -137,7 +140,7 @@ namespace PhoneDirectory.API.Controllers
             {
                 personListFromCache = null;
             }
-            if (personListFromCache != null)
+            if (personListFromCache != null && personListFromCache.Length > 0)
             {
                 cacheJsonItem = Encoding.UTF8.GetString(personListFromCache);
 
@@ -179,6 +182,8 @@ namespace PhoneDirectory.API.Controllers
         [HttpDelete("DeletePerson/{id}")]
         public async Task<Response<PersonDto>> DeletePerson(int id)
         {
+            if(id <= 0)
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500};
 
             var serviceResult = await _personService.DeletePerson(id);
 
@@ -199,7 +204,7 @@ namespace PhoneDirectory.API.Controllers
                 {
                     personListFromCache = null;
                 }
-                if (personListFromCache != null)
+                if (personListFromCache != null && personListFromCache.Length > 0)
                 {
                     cacheJsonItem = Encoding.UTF8.GetString(personListFromCache);
 
@@ -245,7 +250,7 @@ namespace PhoneDirectory.API.Controllers
         public async Task<Response<PersonDto>> UpdatePerson([FromBody] UpdatePersonDto dto)
         {
 
-            if (String.IsNullOrEmpty(dto.Name) && String.IsNullOrEmpty(dto.Surname))
+            if (String.IsNullOrEmpty(dto.Name) || String.IsNullOrEmpty(dto.Surname))
                 return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Name or surname cannot be empty", Status = 500 };
 
             var serviceResult = await _personService.UpdatePerson(dto);
@@ -267,7 +272,7 @@ namespace PhoneDirectory.API.Controllers
                 {
                     personListFromCache = null;
                 }
-                if (personListFromCache != null)
+                if (personListFromCache != null && personListFromCache.Length > 0)
                 {
                     cacheJsonItem = Encoding.UTF8.GetString(personListFromCache);
 

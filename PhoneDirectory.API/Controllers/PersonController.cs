@@ -33,8 +33,8 @@ namespace PhoneDirectory.API.Controllers
         public async Task<Response<PersonDto>> Get(int id)
         {
 
-            if(id <= 0)
-                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500};
+            if (id <= 0)
+                return new Response<PersonDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500 };
 
             var serviceResult = await _personService.GetPersonById(id);
 
@@ -49,7 +49,7 @@ namespace PhoneDirectory.API.Controllers
 
 
         [HttpPost("CreatePerson")]
-        public async Task<Response<PersonDto>> CreatePerson(CreatePersonDto dto)
+        public async Task<Response<PersonDto>> CreatePerson([FromBody]  CreatePersonDto dto)
         {
             RegexHelper helper = new RegexHelper();
             if (String.IsNullOrEmpty(dto.Name) || String.IsNullOrEmpty(dto.Surname))

@@ -90,8 +90,8 @@ namespace PhoneDirectory.API.Controllers
         [HttpGet("GetInformation/{id}")]
         public async Task<Response<InformationDto>> Get(int id)
         {
-            if(id <= 0)
-                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500};
+            if (id <= 0)
+                return new Response<InformationDto>() { isSuccess = false, Data = null, List = null, Message = "Value of id is invalid", Status = 500 };
 
             var serviceResult = await _informationService.GetInformationById(id);
 
@@ -105,7 +105,7 @@ namespace PhoneDirectory.API.Controllers
         }
 
         [HttpPost("CreateInformation")]
-        public async Task<Response<InformationDto>> CreateInformation(CreateInformationDto dto)
+        public async Task<Response<InformationDto>> CreateInformation([FromBody] CreateInformationDto dto)
         {
             RegexHelper helper = new RegexHelper();
             if (String.IsNullOrEmpty(dto.Location) || String.IsNullOrEmpty(dto.Phone))

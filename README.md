@@ -20,7 +20,10 @@
 - A person can have **many informations**
 - Windows Sql Server is used as database
 
-- %60 unit testing code coverage is not available in the project because of the time limitation and ongoing heavy work schedule
+# Unit Test
+
+- Both PersonController and InformationController tested with unit test.
+- Xunit and Moq libraries are used.
 
 # Before Run
 
